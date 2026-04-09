@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0f766e">
+  <title>Student Result Portal</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@300;400;500;600;700&display=swap');
+    
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --text:#111827;
+      --brand:#0f766e;
+      --brand2:#064e3b;
+      --accent:#2563eb;
+      --warn:#f59e0b;
+      --danger:#dc2626;
+      --ok:#16a34a;
+      --line:#e5e7eb;
+      --shadow: 0 12px 35px rgba(17,24,39,.10);
+      --shadow2: 0 8px 20px rgba(17,24,39,.08);
+      --radius: 16px;
+    }
+
+    *{box-sizing:border-box}
+    html { overscroll-behavior: none; }
+    body{
+      font-family:'Hind Siliguri','Noto Serif Bengali', sans-serif;
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(15,118,110,.10), transparent 60%),
+        radial-gradient(900px 500px at 90% 20%, rgba(37,99,235,.10), transparent 55%),
+        var(--bg);
+      margin:0;
+      padding:18px;
+      color:var(--text);
+      overflow-y: auto;
+      overscroll-behavior-y: contain;
+    }
+
+    .wrap{max-width: 980px; margin: 0 auto;}
+
+    /* Top Hero Header */
+    .hero{
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      border-radius: 22px;
+      padding: 22px 18px;
+      color:#fff;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow:hidden;
+    }
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:-60px -80px auto auto;
+      width:260px;
+      height:260px;
+      background: radial-gradient(circle, rgba(255,255,255,.22), transparent 60%);
+      transform: rotate(20deg);
+      filter: blur(2px);
+    }
+    .hero-top{
+      display:flex; gap:14px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+    }
+    .hero h1{ margin:0; font-size: 28px; line-height:1.15; letter-spacing:.2px; }
+    .hero p{ margin:6px 0 0; opacity:.92; font-size: 14px; }
+    .hero-right{ text-align:right; min-width: 220px; }
+    .hero-right small{ display:block; opacity:.9; font-size: 12px; }
+
+    /* App Card */
+    .card{
+      margin-top: 14px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      border: 1px solid rgba(229,231,235,.85);
+      overflow:hidden;
+    }
+    .card-head{
+      padding: 16px 18px;
+      background: linear-gradient(180deg, rgba(15,118,110,.06), rgba(15,118,110,0));
+      border-bottom: 1px solid var(--line);
+      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    }
+    .step-pill{
+      display:inline-flex; align-items:center; gap:8px; padding:8px 12px;
+      border-radius: 999px; border:1px solid rgba(15,118,110,.35);
+      background: rgba(15,118,110,.08); color: var(--brand2);
+      font-weight:700; font-size: 13px;
+    }
+    .step-pill .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: var(--brand); box-shadow: 0 0 0 4px rgba(15,118,110,.12);
+    }
+
+    .card-body{ padding: 18px; }
+    h3{ margin:0 0 10px; font-size: 18px; display:flex; align-items:center; gap:10px; }
+    .hbar{
+      width:10px;height:22px;border-radius: 6px;
+      background: linear-gradient(180deg, var(--brand), var(--accent));
+    }
+    .subtext{ margin:0 0 14px; font-size: 13px; color: var(--muted); }
+
+    /* API Controls Style */
+    .api-control-box {
+        background: #eff6ff; border: 1px solid #bfdbfe; padding: 16px;
+        border-radius: 14px; margin-bottom: 16px;
+    }
+    .api-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .api-select {
+        padding: 12px; border-radius: 10px; border: 1px solid var(--line);
+        flex: 1; font-weight: 700; outline: none; background:#fff;
+    }
+
+    .input-mark {
+      width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 12px;
+      font-size: 16px; font-weight: 800; outline:none; transition:.15s; background:#fff; text-align:center;
+    }
+    .input-mark:focus {
+      border-color: rgba(15,118,110,.45);
+      box-shadow: 0 0 0 4px rgba(15,118,110,.12); background: rgba(15,118,110,.04);
+    }
+
+    /* Buttons */
+    .btnrow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
+    .btn{
+      border:none; border-radius: 12px; padding: 14px; font-size: 16px; font-weight: 800;
+      cursor:pointer; color:#fff; transition:.18s ease; width:100%;
+      box-shadow: 0 10px 22px rgba(17,24,39,.10); text-align:center;
+    }
+    .btn:active{ transform: scale(.99); }
+    .btn:hover{ transform: translateY(-2px); }
+    .btn-primary{ background: linear-gradient(135deg, var(--brand), var(--brand2)); }
+    .btn-accent{ background: linear-gradient(135deg, #4f46e5, #3730a3); }
+    .btn-info { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+
+    .btn-spinner {
+        display: inline-block; width: 18px; height: 18px;
+        border: 3px solid rgba(255, 255, 255, 0.3); border-radius: 50%;
+        border-top-color: #fff; animation: btn-spin 0.8s linear infinite;
+        margin-bottom: -3px; margin-right: 8px;
+    }
+    @keyframes btn-spin { to { transform: rotate(360deg); } }
+
+    /* Premium Select Dropdown (Glassmorphism) */
+    .premium-select-wrapper { position: relative; flex: 1; min-width: 170px; user-select: none; }
+    .premium-select-wrapper select { display: none !important; }
+    .ps-trigger {
+        background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(16px);
+        border: 1.5px solid rgba(255, 255, 255, 0.9);
+        box-shadow: 0 6px 20px rgba(15, 118, 110, 0.08), inset 0 2px 5px rgba(255, 255, 255, 0.6);
+        padding: 12px 18px; border-radius: 14px; display: flex; align-items: center; justify-content: space-between;
+        cursor: pointer; font-weight: 800; color: #0f172a; transition: all 0.4s ease; z-index: 10;
+    }
+    .ps-trigger:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(15, 118, 110, 0.2); }
+    .ps-trigger.active { border-color: #0f766e; box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.15); background: #fff; }
+    .ps-options {
+        position: absolute; top: calc(100% + 10px); left: 0; right: 0;
+        background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 16px;
+        box-shadow: 0 24px 50px rgba(15, 23, 42, 0.15); opacity: 0; visibility: hidden;
+        transform: translateY(-15px); transition: all 0.3s ease; z-index: 9999;
+        max-height: 250px; overflow-y: auto; padding: 8px;
+    }
+    .ps-trigger.active + .ps-options { opacity: 1; visibility: visible; transform: translateY(0); }
+    .ps-option {
+        padding: 12px 16px; border-radius: 12px; cursor: pointer; font-weight: 700;
+        color: #475569; transition: all 0.25s ease;
+    }
+    .ps-option:hover { background: rgba(15, 118, 110, 0.08); color: #0f766e; }
+    .ps-option.selected { background: linear-gradient(135deg, #0f766e, #064e3b); color: #fff; }
+
+    /* Student Info Display */
+    .student-info-display {
+        background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534;
+        padding: 16px; border-radius: 14px; font-size: 16px; margin-bottom: 14px;
+        font-weight: 700; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border-left: 5px solid #16a34a; text-align:center;
+    }
+
+    /* Result Area */
+    #result-area {
+      display:none; margin-top: 14px; border-radius: 16px; padding: 18px;
+      border: 1px solid rgba(22,163,74,.22);
+      background: linear-gradient(180deg, rgba(22,163,74,.07), rgba(255,255,255,.0));
+    }
+    .result-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .res-box{
+      background:#fff; border:1px solid var(--line); border-radius: 14px; padding: 12px;
+      text-align:center; box-shadow: 0 8px 20px rgba(17,24,39,.06);
+    }
+    .res-box span{ display:block; font-size: 12px; color: var(--muted); font-weight:700; }
+    .res-box strong{ display:block; font-size: 22px; font-weight: 900; margin-top: 4px; }
+    .full-width{ grid-column: span 2; }
+    .gpa-box{
+      background: linear-gradient(135deg, var(--brand2), var(--brand)); color:#fff;
+      border: none; position:relative; overflow:hidden;
+    }
+    .gpa-box::after{
+      content:""; position:absolute; inset:-60px -70px auto auto;
+      width:220px;height:220px;
+      background: radial-gradient(circle, rgba(255,255,255,.18), transparent 62%);
+      transform: rotate(10deg);
+    }
+    .gpa-box span{ color: rgba(255,255,255,.85); }
+    .gpa-box strong{ font-size: 42px; color:#fff; }
+    #r-grade{ display:block; margin-top: 6px; font-weight: 900; color:#fde047; font-size: 16px; }
+
+    .status-pass{ color: var(--ok); }
+    .status-fail{ color: var(--danger); }
+
+    /* Marks table */
+    .marks-table{
+      width:100%; border-collapse: separate; border-spacing: 0;
+      border: 1px solid var(--line); border-radius: 14px; overflow:hidden; background:#fff;
+      margin-bottom: 15px; display: none;
+    }
+    .marks-table th{
+      background: linear-gradient(135deg, rgba(15,118,110,.14), rgba(37,99,235,.10));
+      color:#0b1220; text-align:left; font-weight: 900; padding: 12px;
+      border-bottom: 1px solid var(--line); font-size: 14px;
+    }
+    .marks-table td{
+      padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; font-size: 15px; font-weight: 700;
+    }
+    .marks-table tr:last-child td{ border-bottom:none; }
+
+    /* Toast */
+    .toast {
+      position: fixed; left: 50%; top: 14px; transform: translateX(-50%) translateY(-8px);
+      background: rgba(17, 24, 39, 0.92); color: #fff; padding: 12px 14px;
+      border-radius: 14px; box-shadow: 0 14px 35px rgba(0,0,0,0.25); font-size: 14px;
+      line-height: 1.35; max-width: 92vw; width: min(400px, 92vw); z-index: 9999;
+      opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease;
+      backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.16);
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+    .toast-content{ display:flex; align-items:flex-start; gap:10px; }
+    .toast-icon{
+      width: 22px; height: 22px; border-radius: 999px; display:flex; align-items:center;
+      justify-content:center; font-weight: 900; flex: 0 0 auto; background: rgba(255,255,255,0.14);
+    }
+    .toast-text{ flex: 1 1 auto; font-weight: 700; }
+    .toast.warn { background: rgba(245, 158, 11, 0.92); color: #111827; }
+    .toast.danger { background: rgba(239, 68, 68, 0.92); }
+    .toast.success { background: rgba(5, 150, 105, 0.92); }
+
+    .footer{ margin-top: 20px; text-align:center; color: var(--muted); font-size: 13px; font-weight: 600;}
+    
+    /* Loader Style */
+    .initial-loader { text-align:center; padding: 30px; font-weight: 700; color: var(--brand); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    
+    @media print {
+        body { background: #fff !important; padding: 0; }
+        .hero, .api-control-box, .footer, .btnrow { display: none !important; }
+        .card { border: none; box-shadow: none; margin: 0; }
+        .marks-table, #result-area { display: table !important; width: 100%; border: 1px solid #000; }
+        #active-student-info { display: block !important; border: 1px solid #000; background: #fff !important; color: #000 !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    
+    <div class="hero">
+      <div class="hero-top">
+        <div>
+          <h1>আবদুর রাজ্জাক দাখিল মাদ্রাসা</h1>
+          <p>অনলাইন ফলাফল অনুসন্ধান পোর্টাল</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="step-pill"><span class="dot"></span> ফলাফল অনুসন্ধান</div>
+      </div>
+
+      <div class="card-body">
+        
+        <div class="api-control-box" id="search-box">
+          <h3><span class="hbar"></span> পরীক্ষার তথ্য দিন</h3>
+          <p class="subtext">নিচের তালিকা থেকে আপনার পরীক্ষা নির্বাচন করে রোল বা আইডি নম্বর দিন।</p>
+          
+          <div id="loader" class="initial-loader">
+              <span class="btn-spinner" style="border-top-color: var(--brand); border-width: 4px; width: 24px; height: 24px;"></span>
+              সার্ভার থেকে পরীক্ষার তালিকা আনা হচ্ছে...
+          </div>
+
+          <div id="form-content" style="display: none;">
+              <div class="api-row" style="margin-bottom: 12px;">
+                  <select id="exam-list" class="api-select">
+                      <option value="">পরীক্ষা নির্বাচন করুন...</option>
+                  </select>
+              </div>
+              <div class="api-row">
+                  <input type="number" id="student-roll" class="input-mark" placeholder="রোল বা আইডি নম্বর লিখুন">
+              </div>
+              <div class="btnrow">
+                  <button id="search-btn" class="btn btn-primary" onclick="searchResult()">ফলাফল খুঁজুন</button>
+              </div>
+          </div>
+        </div>
+
+        <div id="result-container" style="display: none;">
+            
+            <div id="active-student-info" class="student-info-display"></div>
+            
+            <table class="marks-table" id="marks-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50%">বিষয়</th>
+                        <th style="width: 25%; text-align:center;">পূর্ণমান</th>
+                        <th style="width: 25%; text-align:center;">প্রাপ্ত নম্বর</th>
+                    </tr>
+                </thead>
+                <tbody id="marks-body"></tbody>
+            </table>
+
+            <div id="result-area">
+                <h4 style="text-align:center;margin:0 0 12px;font-weight:1000;color:var(--brand2);">চূড়ান্ত ফলাফল বিবরণী</h4>
+                <div class="result-grid">
+                  <div class="res-box">
+                    <span>মোট নম্বর</span>
+                    <strong id="r-total-marks">0</strong>
+                  </div>
+                  <div class="res-box">
+                    <span>পূর্ণমান</span>
+                    <strong id="r-full-marks">0</strong>
+                  </div>
+                  <div class="res-box">
+                    <span>গড় নম্বর (%)</span>
+                    <strong id="r-avg">0</strong>
+                  </div>
+                  <div class="res-box">
+                    <span>মেধা স্থান</span>
+                    <strong id="r-merit">--</strong>
+                  </div>
+                  <div class="res-box gpa-box full-width">
+                    <span>অর্জিত জিপিএ (GPA)</span>
+                    <strong id="r-gpa">0.00</strong>
+                    <small id="r-grade"></small>
+                  </div>
+                  <div class="res-box full-width">
+                    <span>স্ট্যাটাস</span>
+                    <strong id="r-status">--</strong>
+                  </div>
+                </div>
+            </div>
+            
+            <div class="btnrow no-print" style="margin-top: 20px;">
+                <button class="btn btn-info" onclick="window.print()">🖨️ রেজাল্ট প্রিন্ট করুন</button>
+                <button class="btn btn-accent" onclick="resetSearch()">🔄 নতুন সার্চ করুন</button>
+            </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer">
+      Powered by ARDM Auto Result Engine
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+<script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxoQM0Xf5SrusbRuCwe4b3s92rK7e014DYkgiuM3yOLs9KKZ773MUkmysrM3PcxyCbpbw/exec';
+    let toastTimer = null;
+
+    // Toast Logic
+    function showToast(message, type='danger'){
+        const t = document.getElementById('toast');
+        const icon = (type==='success') ? '✓' : (type==='warn' ? '!' : '×');
+        t.className = 'toast ' + type;
+        t.innerHTML = `<div class="toast-content"><div class="toast-icon">${icon}</div><div class="toast-text">${message}</div></div>`;
+        t.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // Initialize Page
+    window.onload = function() {
+        fetchExamsList();
+    };
+
+    // Fetch Sheets from Backend
+    async function fetchExamsList() {
+        try {
+            const response = await fetch(API_URL);
+            const res = await response.json();
+            
+            if (res.status === 'success' && res.data.length > 0) {
+                const select = document.getElementById('exam-list');
+                
+                // Parse sheet names safely
+                res.data.forEach(item => {
+                    let sheetName = item.sheetName;
+                    let displayName = sheetName;
+                    
+                    // Parse: [Class][Exam][Year]...
+                    if(sheetName.includes('][')) {
+                        let parts = sheetName.split('][');
+                        let cls = parts[0].replace('[', '');
+                        let exam = parts[1];
+                        let year = parts[2] ? parts[2].replace(']', '') : '';
+                        displayName = `শ্রেণি: ${cls} | ${exam} - ${year}`;
+                    }
+                    
+                    let option = document.createElement('option');
+                    option.value = sheetName;
+                    option.text = displayName;
+                    select.appendChild(option);
+                });
+
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('form-content').style.display = 'block';
+                
+                // Initialize Premium Select UI
+                initPremiumSelects();
+            } else {
+                document.getElementById('loader').innerHTML = '❌ কোনো পরীক্ষার তালিকা পাওয়া যায়নি।';
+            }
+        } catch (error) {
+            document.getElementById('loader').innerHTML = '❌ সার্ভারের সাথে কানেক্ট করা যাচ্ছে না।';
+            showToast('ইন্টারনেট কানেকশন চেক করুন!', 'danger');
+        }
+    }
+
+    // Search Result
+    async function searchResult() {
+        const sheetName = document.getElementById('exam-list').value;
+        const rollInput = document.getElementById('student-roll').value.trim();
+        const btn = document.getElementById('search-btn');
+
+        if (!sheetName) { showToast('পরীক্ষার নাম নির্বাচন করুন', 'warn'); return; }
+        if (!rollInput) { showToast('রোল বা আইডি নম্বর দিন', 'warn'); return; }
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="btn-spinner"></span> খোঁজা হচ্ছে...';
+        document.getElementById('result-container').style.display = 'none';
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: "search", sheetName: sheetName })
+            });
+            const res = await response.json();
+
+            if (res.status === 'success') {
+                processResultData(res.data, rollInput);
+            } else {
+                showToast(res.message || 'ফলাফল পাওয়া যায়নি', 'danger');
+            }
+        } catch (error) {
+            showToast('সার্ভার এরর! আবার চেষ্টা করুন।', 'danger');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'ফলাফল খুঁজুন';
+        }
+    }
+
+    // Process & Display Data
+    function processResultData(dataArr, searchKey) {
+        if (!dataArr || dataArr.length < 2) {
+            showToast('শিটে কোনো ডাটা নেই!', 'danger'); return;
+        }
+
+        const headers = dataArr[0];
+        // Find row where Roll (index 4) or ID (index 1) matches
+        const studentRow = dataArr.slice(1).find(row => row[4] == searchKey || row[1] == searchKey);
+
+        if (!studentRow) {
+            showToast('এই রোল বা আইডির কোনো রেজাল্ট পাওয়া যায়নি!', 'warn'); return;
+        }
+
+        // Render Student Info
+        const stdInfo = document.getElementById('active-student-info');
+        stdInfo.style.display = 'block';
+        stdInfo.innerHTML = `
+            <div style="font-size:22px; font-weight:800; color:#15803d;">${studentRow[2] || '-'} ${studentRow[3] ? '('+studentRow[3]+')' : ''}</div>
+            <div style="display:flex; justify-content:center; gap:15px; margin-top:6px; font-size:15px; color:#166534;">
+               <span>শ্রেণি: <b>${studentRow[5] || '-'}</b></span>
+               <span>রোল: <b>${studentRow[4] || '-'}</b></span>
+               <span>আইডি: <b>${studentRow[1] || '-'}</b></span>
+            </div>
+        `;
+
+        // Parse Subject Marks
+        const totalMarksIndex = headers.findIndex(h => h === "Total Marks" || h.includes("Total Marks"));
+        const marksBody = document.getElementById('marks-body');
+        marksBody.innerHTML = '';
+        
+        let hasSubjects = false;
+
+        if (totalMarksIndex > 6) {
+            for (let i = 6; i < totalMarksIndex; i++) {
+                let subjectHeader = headers[i];
+                let mark = studentRow[i] !== "" ? studentRow[i] : "-";
+                
+                // Parse full mark from header e.g. "Bangla [100]"
+                let subName = subjectHeader;
+                let fullMark = "100";
+                const match = subjectHeader.match(/(.+) \[(\d+)\]/);
+                if(match) {
+                    subName = match[1].trim();
+                    fullMark = match[2];
+                }
+
+                marksBody.innerHTML += `
+                    <tr>
+                        <td>${subName}</td>
+                        <td style="text-align:center; color:#374151;">${fullMark}</td>
+                        <td style="text-align:center;">${mark}</td>
+                    </tr>
+                `;
+            }
+            hasSubjects = true;
+        }
+
+        document.getElementById('marks-table').style.display = hasSubjects ? 'table' : 'none';
+
+        // Set Result Summary Data
+        const getVal = (colName) => {
+            const idx = headers.findIndex(h => h === colName || h.includes(colName));
+            return idx !== -1 ? studentRow[idx] : '--';
+        };
+
+        document.getElementById('r-total-marks').innerText = getVal("Total Marks");
+        document.getElementById('r-full-marks').innerText = getVal("Full Marks");
+        document.getElementById('r-avg').innerText = getVal("Average (%)");
+        document.getElementById('r-merit').innerText = getVal("Merit Position");
+        document.getElementById('r-gpa').innerText = Number(getVal("GPA")).toFixed(2);
+        document.getElementById('r-grade').innerText = "(" + getVal("Grade") + ")";
+        
+        const status = getVal("Status");
+        const statusEl = document.getElementById('r-status');
+        statusEl.innerText = status;
+        if(status.toLowerCase().includes('pass') || status === 'উত্তীর্ণ') {
+            statusEl.className = 'status-pass';
+        } else {
+            statusEl.className = 'status-fail';
+        }
+
+        // Show Container and Scroll
+        document.getElementById('result-container').style.display = 'block';
+        document.getElementById('result-area').style.display = 'block';
+        document.getElementById('search-box').style.display = 'none'; // Hide search box for cleaner view
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        showToast('ফলাফল সফলভাবে লোড হয়েছে', 'success');
+    }
+
+    function resetSearch() {
+        document.getElementById('student-roll').value = '';
+        document.getElementById('result-container').style.display = 'none';
+        document.getElementById('search-box').style.display = 'block';
+    }
+
+    // Premium Custom Select Engine (Identical to your original app)
+    function initPremiumSelects() {
+        const selects = document.querySelectorAll('.api-select');
+        selects.forEach(select => {
+            if(select.parentElement.classList.contains('premium-select-wrapper')) return;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'premium-select-wrapper';
+            select.parentNode.insertBefore(wrapper, select);
+            wrapper.appendChild(select);
+            
+            const trigger = document.createElement('div');
+            trigger.className = 'ps-trigger';
+            let initialText = select.options[select.selectedIndex] ? select.options[select.selectedIndex].text : 'নির্বাচন করুন...';
+            trigger.innerHTML = `<span class="ps-text">${initialText}</span> <span class="ps-arrow" style="color:#64748b; font-size:12px;">▼</span>`;
+            
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = 'ps-options';
+            
+            Array.from(select.options).forEach(option => {
+                const optDiv = document.createElement('div');
+                optDiv.className = 'ps-option' + (option.selected ? ' selected' : '');
+                optDiv.innerHTML = option.text;
+                
+                optDiv.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    select.value = option.value;
+                    trigger.querySelector('.ps-text').innerText = option.text;
+                    optionsContainer.querySelectorAll('.ps-option').forEach(el => el.classList.remove('selected'));
+                    optDiv.classList.add('selected');
+                    trigger.classList.remove('active');
+                });
+                optionsContainer.appendChild(optDiv);
+            });
+            
+            wrapper.appendChild(trigger);
+            wrapper.appendChild(optionsContainer);
+            
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.ps-trigger').forEach(t => { if(t !== trigger) t.classList.remove('active'); });
+                trigger.classList.toggle('active');
+            });
+        });
+        
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.ps-trigger').forEach(t => t.classList.remove('active'));
+        });
+    }
+</script>
+
+</body>
+</html>
